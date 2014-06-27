@@ -1637,6 +1637,157 @@ def _find_flavor(cs, flavor):
         return cs.flavors.find(ram=flavor)
 
 
+## PSVM section
+@utils.arg('ip', metavar='<ip>', help='switch IP address')
+@utils.arg('switch_cred_id', type=int, metavar='<switch_cred_id>',
+           help='switch credential id')
+def do_psvm_create(cs, args):
+    """Creates a new switch."""
+    psvm = cs.psvm.create(args.ip, args.switch_cred_id)
+    utils.print_list([psvm], ['id', 'ip', 'switch_cred_id'])
+
+
+@utils.arg('id', metavar='<id>', type=int, help='switch id to update')
+@utils.arg('--ip', metavar='<ip>', dest="ip", default=None,
+           help='switch IP address')
+@utils.arg('--cred', metavar='<switch_cred_id>', dest="switch_cred_id",
+           default=None, type=int, help='switch credential id')
+def do_psvm_update(cs, args):
+    """Updates a specified switch."""
+    # Use only the arguments of interest
+    valid_args = ['ip', 'switch_cred_id']
+    payload = {}
+    for k, v in args.__dict__.items():
+        if k in valid_args and v is not None:
+            payload[k] = v
+
+    psvm = cs.psvm.update(args.id, payload)
+    utils.print_list([psvm], ['id'] + valid_args)
+
+
+@utils.arg('id', type=int, metavar='<switch_id>',
+           help='switch id to get')
+def do_psvm_get(cs, args):
+    """Gets information about a specific switchs."""
+    psvm = cs.psvm.get(args.id)
+    utils.print_list([psvm], ['id', 'ip', 'switch_cred_id'])
+
+
+def do_psvm_list(cs, args):
+    """Lists information about all switches."""
+    psvms = cs.psvm.list()
+    utils.print_list(psvms, ['id', 'ip', 'switch_cred_id'])
+
+
+@utils.arg('id', type=int, metavar='<switch_id>',
+           help='id of switch to delete')
+def do_psvm_delete(cs, args):
+    """Deletes specified switch."""
+    cs.psvm.delete(args.id)
+
+
+## PSVM Credentials section
+@utils.arg('user_name', metavar='<user_name>', help='user name')
+@utils.arg('password', metavar='<password>', help='user password')
+def do_psvmcred_create(cs, args):
+    """Creates a new psvm credential."""
+    psvmcred = cs.psvmcred.create(args.user_name, args.password)
+    utils.print_list([psvmcred], ['id', 'user_name', 'password'])
+
+
+@utils.arg('id', metavar='<credentialid>', type=int,
+           help='credential id to update')
+@utils.arg('--user_name', metavar='<user_name>', dest="user_name",
+           default=None, help='New value of user name')
+@utils.arg('--password', metavar='<password>', dest="password",
+           default=None, help='New value of user password')
+def do_psvmcred_update(cs, args):
+    """Updates a specified psvmcred."""
+    # Use only the arguments of interest
+    valid_args = ['user_name', 'password']
+    payload = {}
+    for k, v in args.__dict__.items():
+        if k in valid_args and v is not None:
+            payload[k] = v
+
+    psvmcred = cs.psvmcred.update(args.id, payload)
+    utils.print_list([psvmcred], ['id'] + valid_args)
+
+
+@utils.arg('id', type=int, metavar='<cred_id>', help='credential id to get')
+def do_psvmcred_get(cs, args):
+    """Gets information about a specific psvm credential."""
+    psvmcred = cs.psvmcred.get(args.id)
+    utils.print_list([psvmcred], ['id', 'user_name', 'password'])
+
+
+def do_psvmcred_list(cs, args):
+    """Lists information about all psvm credentials."""
+    psvmcreds = cs.psvmcred.list()
+    utils.print_list(psvmcreds, ['id', 'user_name', 'password'])
+
+
+@utils.arg('id', type=int, metavar='<id>',
+           help='id of credential to delete')
+def do_psvmcred_delete(cs, args):
+    """Deletes specified psvmcred."""
+    cs.psvmcred.delete(args.id)
+
+
+## PSVM PortBind section
+@utils.arg('switch_id', type=int, metavar='<switch_id>', help='switch id')
+@utils.arg('compute_node_id', type=int, metavar='<compute_node_id>',
+           help='compute node id')
+@utils.arg('switch_port', metavar='<switch_port>', help='switch port name')
+def do_psvmpbind_create(cs, args):
+    """Creates a new psvm switch port bind."""
+    psvmpbind = cs.psvmpbind.create(args.switch_id, args.compute_node_id,
+                                    args.switch_port)
+    utils.print_list([psvmpbind], ['id', 'switch_id', 'compute_node_id',
+                                   'switch_port'])
+
+
+@utils.arg('id', metavar='<psvmbind_id>', type=int, help='PSVM Port Bind id')
+@utils.arg('--switch_id', metavar='<switch_id>', dest="switch_id",
+           default=None, type=int, help='switch id')
+@utils.arg('--compute_node_id', metavar='<compute_node_id>',
+           dest="compute_node_id", default=None, type=int,
+           help='compute node id')
+@utils.arg('--switch_port', metavar='<switch_port>', dest="switch_port",
+           default=None, help='switch port')
+def do_psvmpbind_update(cs, args):
+    """Updates a specified psvmpbind."""
+    # Use only the arguments of interest
+    valid_args = ['switch_id', 'compute_node_id', 'switch_port']
+    payload = {}
+    for k, v in args.__dict__.items():
+        if k in valid_args and v is not None:
+            payload[k] = v
+    psvmpbind = cs.psvmpbind.update(args.id, payload)
+    utils.print_list([psvmpbind], ['id'] + valid_args)
+
+
+@utils.arg('id', type=int, metavar='<switch_id>', help='switch id')
+def do_psvmpbind_get(cs, args):
+    """Gets information about a specific psvm portbind."""
+    psvmpbind = cs.psvmpbind.get(args.id)
+    utils.print_list([psvmpbind], ['id', 'switch_id',
+                                   'compute_node_id', 'switch_port'])
+
+
+def do_psvmpbind_list(cs, args):
+    """Lists information about all psvm portbinds."""
+    psvmpbinds = cs.psvmpbind.list()
+    utils.print_list(psvmpbinds, ['id', 'switch_id',
+                                  'compute_node_id', 'switch_port'])
+
+
+@utils.arg('id', type=int, metavar='<id>', help='portbind  id')
+def do_psvmpbind_delete(cs, args):
+    """Deletes the specified psvmpbind."""
+    cs.psvmpbind.delete(args.id)
+
+
 @utils.arg('server', metavar='<server>', help=_('Name or ID of server.'))
 @utils.arg('network_id',
     metavar='<network-id>',

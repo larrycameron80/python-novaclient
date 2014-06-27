@@ -33,6 +33,9 @@ from novaclient.v1_1 import images
 from novaclient.v1_1 import keypairs
 from novaclient.v1_1 import limits
 from novaclient.v1_1 import networks
+from novaclient.v1_1 import psvm
+from novaclient.v1_1 import psvmcred
+from novaclient.v1_1 import psvmpbind
 from novaclient.v1_1 import quota_classes
 from novaclient.v1_1 import quotas
 from novaclient.v1_1 import security_group_rules
@@ -151,6 +154,9 @@ class Client(object):
         self.services = services.ServiceManager(self)
         self.fixed_ips = fixed_ips.FixedIPsManager(self)
         self.floating_ips_bulk = floating_ips_bulk.FloatingIPBulkManager(self)
+        self.psvm = psvm.PsvmManager(self)
+        self.psvmcred = psvmcred.PsvmcredManager(self)
+        self.psvmpbind = psvmpbind.PsvmpbindManager(self)
         self.os_cache = os_cache or not no_cache
         self.availability_zones = \
             availability_zones.AvailabilityZoneManager(self)
